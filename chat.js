@@ -1,4 +1,5 @@
-const letterbox={
+const 랜덤=(min,max)=>Math.floor(Math.random()*(max-min+1)+min),
+letterbox={
   word:{},
   변환(s){
     let r=[];
@@ -99,7 +100,7 @@ chat={
     this.nw[buf_txt]["\0"]++;
   },
   대답(s){
-    s=letterbox.변환(s);console.log(s);
+    s=letterbox.변환(s);
     let fw={},pw={};
     s.map($=>{
       if(this.fw[$])
@@ -110,7 +111,7 @@ chat={
       if(this.pw[$])
       Object.keys(this.pw[$]).map(_=>{
         if(!pw[_])pw[_]=0
-        pw[_]=this.pw[$][_]/this.pw_max[$]
+        pw[_]+=this.pw[$][_]/this.pw_max[$]
       })
     })
     let fw_max=["",0]
@@ -189,6 +190,7 @@ chat.학습("괜찮아, 문제없어.... 라고 생각해 아마","그럼 오늘
 chat.학습("아리스 밥먹자","아리스는 피자가 먹고 싶습니다!")
 chat.학습("아리스 밥 먹을래?","아리스는 피자가 먹고 싶습니다!")
 chat.학습("아리스 밥이나 먹자","아리스는 햄버거가 먹고 싶습니다!")
+chat.학습("아리스 밥 먹을래?","아리스는 햄버거가 먹고 싶습니다!")
 chat.학습("밥이나 먹자","아리스는 피자가 먹고 싶습니다!")
 chat.학습("아리스 밥이나 먹자","아리스는 피자가 먹고 싶습니다!")
 chat.학습("축하해! 레벨업","선생님도 노력하셔야 합니다. 지금 레벨에 잠이 옵니까?")
