@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>물나비 챗봇</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,interactive-widget=resize-content">
+  <title>모모톡 챗봇</title>
   <link rel="stylesheet"href="css/main.css">
   <script src="chat.js"></script>
   <style>
@@ -32,7 +32,10 @@
     <button id="button"onclick="
       me(input.value);
       Other(chat.대답(input.value),'아리스');
+      message.scrollTop=message.scrollHeight;
       input.value=''
+      t.style.height=0;
+      t.style.height=input.scrollHeight+'px'
     "><svg viewBox="0 0 24 24"><path d="m2 21 21-9L2 3v7l15 2-15 2z"/></svg></button>
   </div>
   <script>
