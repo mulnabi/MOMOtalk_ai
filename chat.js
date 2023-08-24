@@ -14,6 +14,7 @@ letterbox={
         }else{
           if(!s[i])break
           if(/[\s,."'?!]/.test(s[i])){
+            if(w[""])break;
             let key=Object.keys(w)
             w=w[key[0]];
             p+=key;
@@ -42,6 +43,7 @@ letterbox={
                   buf_same=same;
                 }
               }
+              if(w[""]&&buf_same<4)break;
               w=w[buf_j];
               p+=buf_j;
               ++i
@@ -64,14 +66,16 @@ letterbox={
       w=w[word[i]]
       ++i
     }
+    w[""]=1;
   }
 },
 chat={
   fw:{},fw_max:{},
   nw:{},nw_max:{},
   pw:{},pw_max:{},
+  ct:{},ct_max:{},
   학습(i,o){
-    o=o.split(/[\s,."']/);
+    o=strCut(o);
     letterbox.변환(i).map($=>{
       if(!this.fw[$])this.fw[$]={};
       if(!this.fw[$][o[0]])this.fw[$][o[0]]=0;
@@ -99,6 +103,25 @@ chat={
     if(!this.nw[buf_txt]["\0"])this.nw[buf_txt]["\0"]=0;
     this.nw[buf_txt]["\0"]++;
   },
+  맥락학습(arr){
+    let buf=[];
+    arr.map($=>{
+      this.학습($[0],$[1])
+      let out=strCut($[1])
+      console.log(out);
+      if(buf[0])
+      letterbox.변환(buf[0]).map($=>{
+        if(!this.ct[$])this.ct[$]={};
+        out.map(_=>{
+          if(!this.ct[$][_])this.ct[$][_]=0;
+          this.ct[$][_]++;
+          if(this.ct_max[$]==undefined||this.ct_max[$]<this.ct[$][_])this.ct_max[$]=this.ct[$][_];
+        })
+        
+      })
+      buf=$
+    })
+  },
   대답(s){
     s=letterbox.변환(s);
     let fw={},pw={};
@@ -112,6 +135,11 @@ chat={
       Object.keys(this.pw[$]).map(_=>{
         if(!pw[_])pw[_]=0
         pw[_]+=this.pw[$][_]/this.pw_max[$]
+      })
+      if(this.ct[$])
+      Object.keys(this.ct[$]).map(_=>{
+        if(!pw[_])pw[_]=0
+        pw[_]+=this.ct[$][_]/this.ct_max[$]
       })
     })
     let fw_max=["",0]
@@ -153,10 +181,31 @@ letterbox.add("를")
 letterbox.add("봄")
 letterbox.add("여름")
 letterbox.add("가을")
+letterbox.add("아니")
+letterbox.add("저")
+letterbox.add("그")
+letterbox.add("광역")
+letterbox.add("명")
+letterbox.add("그게")
+letterbox.add("잖아")
 letterbox.add("피자")
+letterbox.add("모자")
+letterbox.add("모자이크")
+letterbox.add("아이스크림")
 letterbox.add("햄버거")
 letterbox.add("겨울")
 letterbox.add("자다")
+
+function strCut(s){
+  let arr=[]
+  while(s){
+    let match;
+    match=s.match(/^[\s,"']/)||s.match(/^\.+/)||s.match(/^[^\s,."']*/);
+    if(!/\s/.test(match[0]))arr.push(match[0])
+    s=s.substring(match[0].length);
+  }
+  return arr
+}
 
 function korE(kor) {
   const f=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'],
@@ -213,3 +262,5 @@ chat.학습("아리스 드디어 말하는법을 익힌거야?","필멸자여 �
 chat.학습("싸우자!","그런가요 이것은 일기토 이벤트인 것입니까?")
 chat.학습("아리스 싸우자!","그런가요 이것은 일기토 이벤트인 것입니까?")
 chat.학습("자니?","아뇨? 저는 지금 게임을 하고 있습니다")
+
+chat.맥락학습([["아리스 너의 정체는?","저는 명속성 광역딜러"],["그게 아니잖아","가 아니라 프.. 프로글래머 입니다."]])
