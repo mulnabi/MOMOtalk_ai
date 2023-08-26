@@ -1,4 +1,5 @@
 const 랜덤=(min,max)=>Math.floor(Math.random()*(max-min+1)+min),
+endcode={'<.>':'.','<?>':'?','<!>':'!'},
 letterbox={
   word:{},
   변환(s){
@@ -100,9 +101,6 @@ chat={
       }
       buf_txt=$;
     });
-    if(!this.nw[buf_txt])this.nw[buf_txt]={};
-    if(!this.nw[buf_txt]["\0"])this.nw[buf_txt]["\0"]=0;
-    this.nw[buf_txt]["\0"]++;
   },
   맥락학습(arr){
     let buf=[];
@@ -151,8 +149,7 @@ chat={
       if(fw_max[1]<fw[$])fw_max=[$,fw[$]]
     })
     let bw=fw_max[0],r="",i=0;
-    while(bw!="\0"&&i<100){++i
-      r+=bw+" "
+    while(!/<[.?!]>/.test(bw)&&i<100){++i
       let nw={},words=this.nw[bw],nw_max=this.nw_max[bw]||1;
       for(const i in words){
         if(pw[i])nw[i]=words[i]/nw_max*1.1+pw[i];
@@ -162,8 +159,11 @@ chat={
         if(buf[1]<nw[i])buf=[i,nw[i]];
       }
       console.log(pw[buf[0]]*=.7);
+      if(/[.?!]/.test(buf[0]))r+=bw
+      else r+=bw+" ";
       bw=buf[0]
     }
+    r+=endcode[bw]
     console.log(pw);
     this.before_txt=s
     return r;
@@ -207,10 +207,13 @@ function strCut(s){
   let arr=[]
   while(s){
     let match;
-    match=s.match(/^[\s,"']/)||s.match(/^\.+/)||s.match(/^[^\s,."']*/);
+    match=s.match(/^[\s,"'?!]/)||s.match(/^\.+/)||s.match(/^[^\s,."'?!]*/);
     if(!/\s/.test(match[0]))arr.push(match[0])
     s=s.substring(match[0].length);
   }
+  console.log(/^[.?!]/.test(arr[arr.length-1]));
+  if(/^[.?!]/.test(arr[arr.length-1]))arr[arr.length-1]=arr[arr.length-1].replace(/^[.?!]/,"<$&>")
+  else arr.push('<.>')
   return arr
 }
 
