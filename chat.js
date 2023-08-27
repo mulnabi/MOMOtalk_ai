@@ -107,7 +107,6 @@ chat={
     arr.map($=>{
       this.학습($[0],$[1])
       let out=strCut($[1])
-      console.log(out);
       if(buf[0])
       letterbox.변환(buf[0]).map($=>{
         if(!this.ct[$])this.ct[$]={};
@@ -123,6 +122,7 @@ chat={
   },
   대답(s){
     s=letterbox.변환(s);
+    console.log(s);
     let fw={},pw={};
     s.map($=>{
       if(this.fw[$])
@@ -158,13 +158,12 @@ chat={
       for(const i in nw){
         if(buf[1]<nw[i])buf=[i,nw[i]];
       }
-      console.log(pw[buf[0]]*=.7);
+      pw[buf[0]]*=.7
       if(/[.?!]/.test(buf[0]))r+=bw
       else r+=bw+" ";
       bw=buf[0]
     }
     r+=endcode[bw]
-    console.log(pw);
     this.before_txt=s
     return r;
   }
@@ -197,10 +196,16 @@ letterbox.add("그게")
 letterbox.add("잖아")
 letterbox.add("피자")
 letterbox.add("모자")
+letterbox.add("좋은")
+letterbox.add("꿈")
+letterbox.add("배")
+letterbox.add("아니")
+letterbox.add("안")
 letterbox.add("모자이크")
 letterbox.add("아이스크림")
 letterbox.add("햄버거")
 letterbox.add("겨울")
+letterbox.add("고프다")
 letterbox.add("자다")
 
 function strCut(s){
@@ -211,7 +216,6 @@ function strCut(s){
     if(!/\s/.test(match[0]))arr.push(match[0])
     s=s.substring(match[0].length);
   }
-  console.log(/^[.?!]/.test(arr[arr.length-1]));
   if(/^[.?!]/.test(arr[arr.length-1]))arr[arr.length-1]=arr[arr.length-1].replace(/^[.?!]/,"<$&>")
   else arr.push('<.>')
   return arr
@@ -273,5 +277,10 @@ chat.학습("아리스 드디어 말하는법을 익힌거야?","필멸자여 �
 chat.학습("싸우자!","그런가요 이것은 일기토 이벤트인 것입니까?")
 chat.학습("아리스 싸우자!","그런가요 이것은 일기토 이벤트인 것입니까?")
 chat.학습("자니?","아뇨? 저는 지금 게임을 하고 있습니다")
+chat.학습("아리스 잘자","안녕히 주무세요 선생님!")
+chat.학습("아리스 좋은 꿈꿔","선생님도 좋은 꿈꾸세요")
 
 chat.맥락학습([["아리스 너의 역할은?","저는 명속성 광역딜러"],["그게 아니잖아","가 아니라 프.. 프로글래머 입니다."],["프로그래머 아니야?","아.. 예. 그렇습니다. 맞습니다. 틀림없이, 나는 완벽한 프로그래머 입니다."]])
+chat.맥락학습([["놀자 아리스","선생님도 같이 게임 하실래요?"],["무슨 게임?","마인크래프톤라는 게임입니다."]])
+chat.맥락학습([["뭐해? 아리스","선생님! 같이 게임 하실래요?"],["뭔 게임?","마인크래프톤이라는 샌드박스형 게임입니다."]])
+chat.맥락학습([["배 안고파?","아리스도 배가 고픕니다."],["뭐 먹을래?","선생님은 무얼 드시고 싶습니까?"]])
